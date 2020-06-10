@@ -16,11 +16,10 @@
 
     <properties>
         <maven.compiler.release>13</maven.compiler.release>
-<!--        
+
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>nehuenlabs</sonar.organization>
         <sonar.projectKey>nehuenlabs</sonar.projectKey>        
--->
     </properties>
 
     <dependencies>
@@ -135,7 +134,7 @@
             <type>jar</type>
         </dependency>
     </dependencies>
-<!--
+
     <build>
         <pluginManagement>
             <plugins>
@@ -195,5 +194,5 @@
             </build>
         </profile>
     </profiles>
--->
+
 </project>
