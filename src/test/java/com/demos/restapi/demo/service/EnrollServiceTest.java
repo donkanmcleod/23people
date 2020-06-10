@@ -236,16 +236,11 @@ public class EnrollServiceTest {
                 }
                 
 
-                List<CourseDTO> pagedResult = this.enrollSrv.getAllCoursesByPage(10, 3);
+                List<CourseDTO> pagedResult = this.enrollSrv.getAllCoursesByPage(10, 3).getContent();
          
                 assertTrue( pagedResult.get(0).getName().equals(testingName1 + "_30") );
                 assertTrue( pagedResult.get(9).getName().equals(testingName1 + "_39") );
                 
-            
-                pagedResult = this.enrollSrv.getAllCoursesByPage(10, 30);
-         
-                assertTrue( pagedResult.isEmpty() );
-
         } catch (EnrollServiceNotFoundException | EnrollServiceException ex) {
             
             Logger.getLogger(EnrollServiceTest.class.getName()).log(Level.SEVERE, null, ex);

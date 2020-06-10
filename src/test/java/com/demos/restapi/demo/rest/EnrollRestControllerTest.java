@@ -12,6 +12,8 @@ import com.demos.restapi.demo.service.dto.CourseDTO;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.hamcrest.CoreMatchers.containsString;
+import org.hamcrest.Matchers;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeAll;
@@ -32,6 +34,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -160,6 +164,18 @@ public class EnrollRestControllerTest {
                 
                 assertTrue( courseDto.getName().equals(testingName2) );
 
+
+                mvc.perform(
+                    
+                    MockMvcRequestBuilders
+                        .get("/enrolling/courses/0")
+                        .header(HttpHeaders.AUTHORIZATION, token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect( status().is(404) )
+                    ;
+                
         } catch (Exception ex) {
 
             fail("Exception reached: " + ex);
@@ -254,7 +270,6 @@ public class EnrollRestControllerTest {
                 }
                 
                 
-                MvcResult result = 
                 mvc.perform(
                     
                     MockMvcRequestBuilders
@@ -263,18 +278,10 @@ public class EnrollRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                 )
-                .andExpect( status().is(200) )
-                .andReturn()
+                .andExpect( status().is(404) )
                     ;
-
-                String jsonResponse = result.getResponse().getContentAsString();
-                
-                List<CourseDTO> list = TestingHelpers.asDTOList(CourseDTO.class, jsonResponse);
-
-                assertTrue( list.isEmpty() );
                 
                 
-                result = 
                 mvc.perform(
                     
                     MockMvcRequestBuilders
@@ -284,16 +291,10 @@ public class EnrollRestControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                 )
                 .andExpect( status().is(200) )
+                .andExpect( content().string( containsString("testing name 1_30") ) )
+                .andExpect( content().string( containsString("testing name 1_39") ) )
                 .andReturn()
                     ;
-
-                jsonResponse = result.getResponse().getContentAsString();
-                
-                list = TestingHelpers.asDTOList(CourseDTO.class, jsonResponse);
-
-                assertTrue( list.get(0).getName().equals(testingName1 + "_30") );
-                assertTrue( list.get(9).getName().equals(testingName1 + "_39") );
-            
 
         } catch (Exception ex) {
 

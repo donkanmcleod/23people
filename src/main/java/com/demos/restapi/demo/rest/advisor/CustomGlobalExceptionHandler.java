@@ -62,7 +62,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     
     
     @ExceptionHandler(EnrollServiceNotFoundException.class)
-    public ResponseEntity<Object> handleNoDataFoundException(EnrollServiceException ex, WebRequest request) {
+    public ResponseEntity<Object> handleNoDataFoundException(EnrollServiceNotFoundException ex, WebRequest request) {
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", new Date());

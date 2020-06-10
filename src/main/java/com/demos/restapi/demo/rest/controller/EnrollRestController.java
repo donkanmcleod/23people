@@ -14,6 +14,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -41,63 +42,107 @@ public class EnrollRestController {
     @Autowired
     private EnrollService enrollSrv;
     
-    
+    /**
+     *
+     * @param course
+     * @return
+     * @throws EnrollServiceException
+     * @throws EnrollServiceNotFoundException
+     */
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/courses")
+    @PostMapping(path = "/courses")
     @PreAuthorize("hasRole('ROLE_ENROLLING')")
     public CourseDTO crateCourse(@Valid @RequestBody CourseDTO course) throws EnrollServiceException, EnrollServiceNotFoundException {
         
         return this.enrollSrv.createCoruse(course);
     }
 
+    /**
+     *
+     * @param course
+     * @param id
+     * @throws EnrollServiceException
+     * @throws EnrollServiceNotFoundException
+     */
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/courses/{id}")
+    @PutMapping(path = "/courses/{id}")
     @PreAuthorize("hasRole('ROLE_ENROLLING')")
     public void updateCourse(@Valid @RequestBody CourseDTO course, @Valid @PathVariable Integer id) throws EnrollServiceException, EnrollServiceNotFoundException {
         
         this.enrollSrv.updateCoruse(id, course);
     }
 
+    /**
+     *
+     * @param id
+     * @throws EnrollServiceException
+     * @throws EnrollServiceNotFoundException
+     */
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/courses/{id}")
+    @DeleteMapping(path = "/courses/{id}")
     @PreAuthorize("hasRole('ROLE_ENROLLING')")
     public void deleteCourse(@Valid @PathVariable Integer id) throws EnrollServiceException, EnrollServiceNotFoundException {
         
         this.enrollSrv.deleteCoruse(id);
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     * @throws EnrollServiceException
+     * @throws EnrollServiceNotFoundException
+     */
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/courses/{id}")
+    @GetMapping(path = "/courses/{id}")
     @PreAuthorize("hasRole('ROLE_ENROLLING')")
     public CourseDTO getCourseById(@Valid @PathVariable Integer id) throws EnrollServiceException, EnrollServiceNotFoundException {
         
         return this.enrollSrv.getCourseById(id);
     }
 
+    /**
+     *
+     * @return
+     * @throws EnrollServiceException
+     * @throws EnrollServiceNotFoundException
+     */
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/courses/all")
+    @GetMapping(path = "/courses/all")
     @PreAuthorize("hasRole('ROLE_ENROLLING')")
     public List<CourseDTO> getAllCourses() throws EnrollServiceException, EnrollServiceNotFoundException {
         
         return this.enrollSrv.getAllCourses();
     }
 
+    /**
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     * @throws EnrollServiceException
+     * @throws EnrollServiceNotFoundException
+     */
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/courses")
+    @GetMapping(path = "/courses", produces = { "application/json" })
     @PreAuthorize("hasRole('ROLE_ENROLLING')")
-    public List<CourseDTO> getAllCoursesByPage(@NotNull @RequestParam(defaultValue = "0") final Integer pageNumber, @NotNull @RequestParam(defaultValue = "10") final Integer pageSize) 
+    public Page<CourseDTO> getAllCoursesByPage(@NotNull @RequestParam(defaultValue = "0") final Integer pageNumber, @NotNull @RequestParam(defaultValue = "10") final Integer pageSize) 
     throws EnrollServiceException, EnrollServiceNotFoundException {
         
         return this.enrollSrv.getAllCoursesByPage(pageSize, pageNumber);
     }
+
     
-
-
-
-
-
-
-    @PostMapping("/students")
+    
+    
+    /**
+     *
+     * @param student
+     * @return
+     * @throws EnrollServiceException
+     * @throws EnrollServiceNotFoundException
+     */
+    @PostMapping(path = "/students")
     public StudentDTO crateStudent(@Valid @RequestBody StudentDTO student) throws EnrollServiceException, EnrollServiceNotFoundException {
         
         return this.enrollSrv.createStudent(student);

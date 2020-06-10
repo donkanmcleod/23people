@@ -10,6 +10,7 @@ import com.demos.restapi.demo.service.dto.StudentDTO;
 import com.demos.restapi.demo.service.exception.EnrollServiceException;
 import com.demos.restapi.demo.service.exception.EnrollServiceNotFoundException;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 
 /**
@@ -30,7 +31,7 @@ public interface EnrollService {
     
     public List<CourseDTO> getAllCourses() throws EnrollServiceException, EnrollServiceNotFoundException;
     
-    public List<CourseDTO> getAllCoursesByPage(final int pageSize, final int pageNumber) throws EnrollServiceException, EnrollServiceNotFoundException;
+    public Page<CourseDTO> getAllCoursesByPage(final int pageSize, final int pageNumber) throws EnrollServiceException, EnrollServiceNotFoundException;
 
 
 

@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -154,6 +155,9 @@ public class EnrollingServiceImpl implements EnrollService {
 
         List<Course> courseList = (List<Course>) this.courseRepo.findAll();
         
+        if (courseList.isEmpty()) throw new EnrollServiceNotFoundException("No records found.");
+        
+        
         try {
                 List<CourseDTO> dtoList = this.courseBuilder.convertToDTOList(courseList, CourseDTO.class);
                 
@@ -167,26 +171,25 @@ public class EnrollingServiceImpl implements EnrollService {
     }
     
     @Override
-    public List<CourseDTO> getAllCoursesByPage(final int pageSize, final int pageNumber) throws EnrollServiceException, EnrollServiceNotFoundException {
+    public Page<CourseDTO> getAllCoursesByPage(final int pageSize, final int pageNumber) throws EnrollServiceException, EnrollServiceNotFoundException {
 
         try {
                 Pageable paging = PageRequest.of(pageNumber, pageSize, Sort.unsorted());
-
+                        
                 Page<Course> pagedResult = this.courseRepo.findAll(paging);
+
+                if (!pagedResult.hasContent()) throw new EnrollServiceNotFoundException("No records found.");
          
-                if(pagedResult.hasContent()) {
 
-                    List<Course> entities = pagedResult.getContent();
-                    
-                    List<CourseDTO> dtoList = this.courseBuilder.convertToDTOList(entities, CourseDTO.class);
-                    
-                    
-                    return dtoList;
-                    
-                } else {
+                List<Course> entities = pagedResult.getContent();
 
-                    return new ArrayList<>(0);
-                }
+                List<CourseDTO> dtoList = this.courseBuilder.convertToDTOList(entities, CourseDTO.class);
+
+                
+                Page<CourseDTO> dtoPagedResult = new PageImpl<CourseDTO>(dtoList, paging, pagedResult.getTotalElements());
+
+                
+                return dtoPagedResult;
             
         } catch (DTOConvertException ex) {
 
